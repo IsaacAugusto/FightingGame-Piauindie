@@ -320,6 +320,7 @@ GameObject:
   - component: {fileID: 1518412410}
   - component: {fileID: 1518412409}
   - component: {fileID: 1518412413}
+  - component: {fileID: 1518412415}
   - component: {fileID: 1518412414}
   m_Layer: 0
   m_Name: Goku
@@ -348,7 +349,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &1518412410
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -366,7 +367,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.94, y: 2.66}
+    oldSize: {x: 2.04, y: 2.28}
     newSize: {x: 2.1666667, y: 2.46}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -474,3 +475,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1518412415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518412408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7cd8035168fc5945a7df15dc411205b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _noOfClicks: 0
+  _maxComboDelay: 0.4
