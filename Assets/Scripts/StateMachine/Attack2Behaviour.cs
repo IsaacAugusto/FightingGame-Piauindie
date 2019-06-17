@@ -7,7 +7,7 @@ public class Attack2Behaviour : StateMachineBehaviour
     private FighterComboScript _script;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        _script = FindObjectOfType<FighterComboScript>();
+        _script = animator.gameObject.GetComponent<FighterComboScript>();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class FighterComboScript : MonoBehaviour
 {
-    private Animator _anim;
     public int _noOfClicks = 0;
-    float _lastClickedTime = 0;
     [SerializeField] float _maxComboDelay = 1;
+    private Animator _anim;
+    private float _lastClickedTime = 0;
 
     void Start()
     {
@@ -18,16 +18,11 @@ public class FighterComboScript : MonoBehaviour
     {
         if (Time.time - _lastClickedTime > _maxComboDelay)
         {
-            Debug.Log("resetou");
             _noOfClicks = 0;
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            OnClick();
         }
     }
 
-    void OnClick()
+    public void GetAttacks()
     {
         if (_noOfClicks < 3)
         {
