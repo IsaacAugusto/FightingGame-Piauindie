@@ -16,6 +16,7 @@ public class FighterBehavior : MonoBehaviour
     private KeyCode _jumpKey;
     private KeyCode _attackKey;
 
+    public float KnockbackTime;
     [SerializeField] private float _mSpeed;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _atkRange;
@@ -23,6 +24,7 @@ public class FighterBehavior : MonoBehaviour
     [SerializeField] private float _damage;
     private float _xInput;
 
+    public bool IsStuned;
     private FighterComboScript _comboScript;
     private Rigidbody2D _rb;
     private Vector3 _rayPosition;
@@ -46,13 +48,29 @@ public class FighterBehavior : MonoBehaviour
         _anim = GetComponent<Animator>();
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        _rayPosition = transform.position - new Vector3(0, 1, 0);
         GetAxis();
         Movement();
-        PlayerAttack();
         Jump();
+    }
+
+    void Update()
+    {
+        KnockbackTimer();
+        _rayPosition = transform.position - new Vector3(0, 1, 0);
+        PlayerAttack();
+    }
+
+    private void KnockbackTimer()
+    {
+        if (IsStuned)
+            KnockbackTime -= Time.deltaTime;
+        if (KnockbackTime < 0)
+        {
+            IsStuned = false;
+            KnockbackTime = 1;
+        }
     }
 
     public void DealDamage()
@@ -62,7 +80,7 @@ public class FighterBehavior : MonoBehaviour
         {
             if (!enemiesToDamage[i].gameObject.Equals(transform.gameObject))
             {
-                enemiesToDamage[i].GetComponent<FighterBehavior>().ReciveDamage(_damage);
+                Push(enemiesToDamage[i].gameObject);
             }
         }
     }
@@ -81,6 +99,13 @@ public class FighterBehavior : MonoBehaviour
         }
     }
 
+    private void Push(GameObject fighter)
+    {
+        fighter.GetComponent<FighterBehavior>().IsStuned = true;
+        fighter.GetComponent<FighterBehavior>().KnockbackTime = 1;
+        fighter.GetComponent<Rigidbody2D>().velocity = ((-transform.right) + Vector3.up).normalized * 10;
+    }
+
     private void GetAxis()
     {
         if (_player == PlayerType.Player1)
@@ -95,7 +120,8 @@ public class FighterBehavior : MonoBehaviour
 
     private void Movement()
     {
-        _rb.velocity = new Vector2(_xInput * _mSpeed, _rb.velocity.y);
+        if (!IsStuned)
+            _rb.velocity = new Vector2((_xInput * _mSpeed), _rb.velocity.y);
 
         if (_rb.velocity.x > 0)
         {

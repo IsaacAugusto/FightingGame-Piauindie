@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c88bd95781a64d94cb5045e9e7d754e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: 0
+  _player: 1
   _groudLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -188,6 +188,8 @@ MonoBehaviour:
   _atkRange: 0.7
   _hp: 10
   _damage: 3
+  _knockbackTime: 1
+  IsStuned: 0
 --- !u!114 &9008574434366110433
 MonoBehaviour:
   m_ObjectHideFlags: 0
