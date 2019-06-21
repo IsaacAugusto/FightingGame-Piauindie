@@ -27,7 +27,6 @@ public class FighterBehavior : MonoBehaviour
     public bool IsStuned;
     private FighterComboScript _comboScript;
     private Rigidbody2D _rb;
-    private Vector3 _rayPosition;
     private Animator _anim;
     private bool _isGrounded;
 
@@ -50,15 +49,14 @@ public class FighterBehavior : MonoBehaviour
 
     private void FixedUpdate()
     {
-        GetAxis();
         Movement();
-        Jump();
     }
 
     void Update()
     {
+        GetAxis();
+        Jump();
         KnockbackTimer();
-        _rayPosition = transform.position - new Vector3(0, 1, 0);
         PlayerAttack();
     }
 
@@ -73,6 +71,12 @@ public class FighterBehavior : MonoBehaviour
         }
     }
 
+   /* private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_atkPosition.transform.position, _atkRange);
+    }*/
+
     public void DealDamage()
     {
         Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(_atkPosition.position, _atkRange, _fighterLayer);
@@ -80,6 +84,11 @@ public class FighterBehavior : MonoBehaviour
         {
             if (!enemiesToDamage[i].gameObject.Equals(transform.gameObject))
             {
+                if (enemiesToDamage[i].tag == "Box")
+                {
+                    enemiesToDamage[i].GetComponent<BoxBehaviour>().HitTheBox(this.gameObject);
+                    return;
+                }
                 Push(enemiesToDamage[i].gameObject);
             }
         }
@@ -95,7 +104,7 @@ public class FighterBehavior : MonoBehaviour
     {
         if (Input.GetKeyDown(_attackKey))
         {
-            _comboScript.GetAttacks();
+            DealDamage();
         }
     }
 
@@ -103,7 +112,7 @@ public class FighterBehavior : MonoBehaviour
     {
         fighter.GetComponent<FighterBehavior>().IsStuned = true;
         fighter.GetComponent<FighterBehavior>().KnockbackTime = 1;
-        fighter.GetComponent<Rigidbody2D>().velocity = ((-transform.right) + Vector3.up).normalized * 10;
+        fighter.GetComponent<Rigidbody2D>().velocity = ((transform.right) + Vector3.up).normalized * 10;
     }
 
     private void GetAxis()
@@ -125,33 +134,50 @@ public class FighterBehavior : MonoBehaviour
 
         if (_rb.velocity.x > 0)
         {
-            transform.rotation = new Quaternion(0, 180, 0, 0);
+            transform.rotation = new Quaternion(0, 0, 0, 0);
         }
         else if (_rb.velocity.x < 0)
         {
-            transform.rotation = new Quaternion(0, 0, 0, 0);
+            transform.rotation = new Quaternion(0, 180, 0, 0);
         }
 
         if (_xInput == -1 || _xInput == 1)
         {
-            _anim.SetBool("Walking", true);
+            _anim.SetBool("IsWalking", true);
+            _anim.SetBool("Idle", false);
         }
         else
         {
-            _anim.SetBool("Walking", false);
+            _anim.SetBool("IsWalking", false);
+            _anim.SetBool("Idle", true);
         }
     }
 
     private void Jump()
     {
-        _isGrounded = Physics2D.Raycast(_rayPosition, Vector2.down, 0.5f, _groudLayer);
-        
         if (_isGrounded)
         {
             if (Input.GetKeyDown(_jumpKey))
             {
-                _rb.AddForce(Vector2.up * _jumpForce);
+                _rb.velocity = Vector2.up * _jumpForce;
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Ground")
+        {
+            _isGrounded = true;
+            _anim.SetBool("IsJumping", false);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Ground"){
+            _isGrounded = false;
+            _anim.SetBool("IsJumping", true);
         }
     }
 }

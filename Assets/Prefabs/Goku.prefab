@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 9008574434366110435}
   - component: {fileID: 9008574434366110433}
   - component: {fileID: 9008574434366110432}
+  - component: {fileID: 1549163771}
   m_Layer: 9
   m_Name: Goku
   m_TagString: Untagged
@@ -61,7 +62,7 @@ Transform:
   m_GameObject: {fileID: 9008574434366110438}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.05417502, y: -2.83, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_Children:
   - {fileID: 9008574433290137660}
   m_Father: {fileID: 0}
@@ -175,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c88bd95781a64d94cb5045e9e7d754e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: 1
+  _player: 0
   _groudLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -183,12 +184,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _atkPosition: {fileID: 9008574433290137660}
-  _mSpeed: 7
-  _jumpForce: 500
+  KnockbackTime: 0
+  _mSpeed: 4
+  _jumpForce: 5
   _atkRange: 0.7
   _hp: 10
   _damage: 3
-  _knockbackTime: 1
   IsStuned: 0
 --- !u!114 &9008574434366110433
 MonoBehaviour:
@@ -223,3 +224,29 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!61 &1549163771
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9008574434366110438}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.0081349015, y: -1.3241785}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.94, y: 2.66}
+    newSize: {x: 2.1666667, y: 2.46}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.5820633, y: 0.36527395}
+  m_EdgeRadius: 0
