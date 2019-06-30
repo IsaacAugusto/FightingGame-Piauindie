@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum PlayerType {Player1, Player2}
+public enum PlayerType {Player1, Player2}
 
 public class FighterBehavior : MonoBehaviour
 {
-    [SerializeField] private PlayerType _player;
+    public PlayerType Player;
 
     [SerializeField] private LayerMask _groudLayer;
     [SerializeField] private LayerMask _fighterLayer;
@@ -24,16 +24,16 @@ public class FighterBehavior : MonoBehaviour
     [SerializeField] private float _damage;
     private float _xInput;
 
+    private Vector2 _screenBoundsPositive;
+    private Vector2 _screenBoundsNegative;
     public bool IsStuned;
-    private FighterComboScript _comboScript;
     private Rigidbody2D _rb;
     private Animator _anim;
     private bool _isGrounded;
 
     void Start()
     {
-        _comboScript = GetComponent<FighterComboScript>();
-        if (_player == PlayerType.Player1)
+        if (Player == PlayerType.Player1)
         {
             _jumpKey = KeyCode.W;
             _attackKey = KeyCode.F;
@@ -45,6 +45,23 @@ public class FighterBehavior : MonoBehaviour
 
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
+    }
+
+    private void LateUpdate()
+    {
+        _screenBoundsPositive = Camera.main.ScreenToWorldPoint(Vector3.one * Screen.width);
+        _screenBoundsNegative = Camera.main.ScreenToWorldPoint(Vector3.zero);
+        if (transform.position.x > _screenBoundsPositive.x)
+        {
+            Vector3 viewPos = transform.position;
+            viewPos.x = _screenBoundsPositive.x;
+            transform.position = viewPos;
+        } else if (transform.position.x < _screenBoundsNegative.x)
+        {
+            Vector3 viewPos = transform.position;
+            viewPos.x = _screenBoundsNegative.x;
+            transform.position = viewPos;
+        }
     }
 
     private void FixedUpdate()
@@ -112,12 +129,12 @@ public class FighterBehavior : MonoBehaviour
     {
         fighter.GetComponent<FighterBehavior>().IsStuned = true;
         fighter.GetComponent<FighterBehavior>().KnockbackTime = 1;
-        fighter.GetComponent<Rigidbody2D>().velocity = ((transform.right) + Vector3.up).normalized * 10;
+        fighter.GetComponent<Rigidbody2D>().velocity = ((transform.right) + Vector3.up).normalized * 5;
     }
 
     private void GetAxis()
     {
-        if (_player == PlayerType.Player1)
+        if (Player == PlayerType.Player1)
         {
             _xInput = Input.GetAxisRaw("HPlayer1");
         }
@@ -164,12 +181,22 @@ public class FighterBehavior : MonoBehaviour
         }
     }
 
+    private void Respawn()
+    {
+        _rb.velocity = Vector2.zero;
+        transform.position = Vector3.zero;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Ground")
         {
             _isGrounded = true;
             _anim.SetBool("IsJumping", false);
+        }
+        if (collision.tag == "OutOfLevel")
+        {
+            Invoke("Respawn", 2);
         }
     }
 

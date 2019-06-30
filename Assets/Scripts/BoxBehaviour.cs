@@ -10,18 +10,26 @@ public class BoxBehaviour : MonoBehaviour
     [SerializeField] private float _hp;
     private SpriteRenderer _spriteRenderer;
     private float _initialHp;
+    private float _initTime;
+    private bool _blinking;
     private Rigidbody2D _rb;
+    private Animator _anim;
 
 
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _anim = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _initialHp = _hp;
     }
 
     void Update()
     {
+        if (_blinking)
+        {
+            Blink();
+        }
         SpriteUpdate();
     }
 
@@ -43,11 +51,26 @@ public class BoxBehaviour : MonoBehaviour
         }
     }
 
+    private void Blink()
+    {
+        _anim.SetBool("Blinking", true);
+        if(Time.time - _initTime > 1)
+        {
+            _blinking = false;
+            _anim.SetBool("Blinking", false);
+        }
+    }
+
     public void HitTheBox(GameObject fighter)
     {
-        _hp -= 1;
-        _rb.velocity = ((fighter.transform.right) + Vector3.up).normalized * 3;
-        _rb.AddTorque(-10f);
+        if (!_blinking)
+        {
+            _hp -= 1;
+            _rb.velocity = ((fighter.transform.right) + Vector3.up).normalized * 3;
+            _rb.AddTorque(-10f);
+            _initTime = Time.time;
+            _blinking = true;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
