@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - OutOfLevel
   - Box
+  - Walls
   layers:
   - Default
   - TransparentFX

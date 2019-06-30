@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+
     }
 
     private void SpawnPlayers()

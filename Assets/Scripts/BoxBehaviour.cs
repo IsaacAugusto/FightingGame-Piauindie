@@ -66,10 +66,18 @@ public class BoxBehaviour : MonoBehaviour
         if (!_blinking)
         {
             _hp -= 1;
-            _rb.velocity = ((fighter.transform.right) + Vector3.up).normalized * 3;
+            _rb.velocity = ((fighter.transform.right) + Vector3.up).normalized * 4.5f;
             _rb.AddTorque(-10f);
             _initTime = Time.time;
             _blinking = true;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Walls")
+        {
+            transform.position = new Vector3(-4, 0, 0);
         }
     }
 

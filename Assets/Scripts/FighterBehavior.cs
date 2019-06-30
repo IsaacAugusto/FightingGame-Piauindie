@@ -189,20 +189,25 @@ public class FighterBehavior : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Ground")
-        {
-            _isGrounded = true;
-            _anim.SetBool("IsJumping", false);
-        }
         if (collision.tag == "OutOfLevel")
         {
             Invoke("Respawn", 2);
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.tag == "Ground" || collision.tag == "Player" || collision.tag == "Box")
+        {
+            _isGrounded = true;
+            _anim.SetBool("IsJumping", false);
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Ground"){
+        if (collision.tag == "Ground" || collision.tag == "Player" || collision.tag == "Box")
+        {
             _isGrounded = false;
             _anim.SetBool("IsJumping", true);
         }
