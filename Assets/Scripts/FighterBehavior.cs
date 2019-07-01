@@ -16,12 +16,15 @@ public class FighterBehavior : MonoBehaviour
     private KeyCode _jumpKey;
     private KeyCode _attackKey;
 
+    public float Hp;
     public float KnockbackTime;
+    public int SpecialDamage;
+
     [SerializeField] private float _mSpeed;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _atkRange;
-    [SerializeField] private float _hp;
-    [SerializeField] private float _damage;
+    [SerializeField] private float _atkSpeed;
+    [SerializeField] private float _atkTime;
     private float _xInput;
 
     private Vector2 _screenBoundsPositive;
@@ -94,7 +97,7 @@ public class FighterBehavior : MonoBehaviour
         Gizmos.DrawWireSphere(_atkPosition.transform.position, _atkRange);
     }*/
 
-    public void DealDamage()
+    public void DealDamage(int TypeOfDamage)
     {
         Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(_atkPosition.position, _atkRange, _fighterLayer);
         for (int i = 0 ; i < enemiesToDamage.Length; i++)
@@ -103,25 +106,31 @@ public class FighterBehavior : MonoBehaviour
             {
                 if (enemiesToDamage[i].tag == "Box")
                 {
-                    enemiesToDamage[i].GetComponent<BoxBehaviour>().HitTheBox(this.gameObject);
+                    enemiesToDamage[i].GetComponent<BoxBehaviour>().HitTheBox(this.gameObject, TypeOfDamage);
                     return;
                 }
-                Push(enemiesToDamage[i].gameObject);
+                else if (TypeOfDamage == 0)
+                {
+                    Push(enemiesToDamage[i].gameObject);
+                }
             }
         }
     }
 
+    // não utilizado ainda ---------------------
     public void ReciveDamage(float damageTaken)
     {
         Debug.Log("I Take damage");
-        _hp -= damageTaken;
+        Hp -= damageTaken;
     }
-
+    //------------------------------------------
     private void PlayerAttack()
     {
-        if (Input.GetKeyDown(_attackKey))
+        _atkTime -= Time.deltaTime;
+        if (Input.GetKeyDown(_attackKey) && _atkTime <= 0)
         {
-            DealDamage();
+            DealDamage(0);
+            _atkTime = _atkSpeed;
         }
     }
 

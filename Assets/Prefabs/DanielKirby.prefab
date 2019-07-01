@@ -126,11 +126,13 @@ MonoBehaviour:
     m_Bits: 512
   _atkPosition: {fileID: 3639050934599613125}
   KnockbackTime: 0
-  _mSpeed: 3
+  _mSpeed: 2
   _jumpForce: 5
   _atkRange: 0.2
   _hp: 10
-  _damage: 3
+  _damage: 1
+  _atkSpeed: 1
+  _atkTime: 0
   IsStuned: 0
 --- !u!50 &3639050933260330228
 Rigidbody2D:

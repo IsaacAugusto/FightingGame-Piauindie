@@ -61,16 +61,54 @@ public class BoxBehaviour : MonoBehaviour
         }
     }
 
-    public void HitTheBox(GameObject fighter)
+    public void HitTheBox(GameObject fighter, int TypeOfHit)
     {
         if (!_blinking)
         {
+            PushAndDamageTheBox(fighter);
+            ScoreIncrease(fighter, TypeOfHit);
+        }
+    }
+
+    private void ScoreIncrease(GameObject fighter, int TypeOfHit)
+    {
+        if (fighter.GetComponent<FighterBehavior>().Player == PlayerType.Player1)
+        {
+            if (TypeOfHit == 0)
+            {
+                BoxSingleton.Instance.Player1Score++;
+                _hp--;
+            }
+            else if (TypeOfHit == 1)
+            {
+                int damage = fighter.GetComponent<FighterBehavior>().SpecialDamage;
+                BoxSingleton.Instance.Player1Score += damage;
+                _hp -= damage;
+            }
+        }
+        else if (fighter.GetComponent<FighterBehavior>().Player == PlayerType.Player2)
+        {
+            if (TypeOfHit == 0)
+            {
+                BoxSingleton.Instance.Player2Score++;
+                _hp--;
+            }
+            else if (TypeOfHit == 1)
+            {
+                int damage = fighter.GetComponent<FighterBehavior>().SpecialDamage;
+                BoxSingleton.Instance.Player2Score += damage;
+                _hp -= damage;
+            }
+        }
+    }
+
+    private void PushAndDamageTheBox(GameObject fighter)
+    {
             _hp -= 1;
             _rb.velocity = ((fighter.transform.right) + Vector3.up).normalized * 4.5f;
-            _rb.AddTorque(-10f);
+            _rb.AddTorque(10f);
             _initTime = Time.time;
             _blinking = true;
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
