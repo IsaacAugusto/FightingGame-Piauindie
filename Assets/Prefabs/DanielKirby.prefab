@@ -125,12 +125,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _atkPosition: {fileID: 3639050934599613125}
-  KnockbackTime: 0
-  _mSpeed: 2
+  Hp: 10
+  KnockbackTime: 1
+  SpecialDamage: 10
+  _mSpeed: 4
   _jumpForce: 5
   _atkRange: 0.2
-  _hp: 10
-  _damage: 1
   _atkSpeed: 1
   _atkTime: 0
   IsStuned: 0

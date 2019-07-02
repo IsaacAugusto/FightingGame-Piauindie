@@ -149,7 +149,7 @@ MonoBehaviour:
     type: 3}
   _boxBroken: {fileID: 8441712382528523809, guid: f282ab4889c7c9f4a987274f04996a10,
     type: 3}
-  _hp: 15
+  _hp: 50
 --- !u!95 &1490177548
 Animator:
   serializedVersion: 3

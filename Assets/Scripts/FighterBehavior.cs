@@ -102,16 +102,33 @@ public class FighterBehavior : MonoBehaviour
         Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(_atkPosition.position, _atkRange, _fighterLayer);
         for (int i = 0 ; i < enemiesToDamage.Length; i++)
         {
-            if (!enemiesToDamage[i].gameObject.Equals(transform.gameObject))
+            Collider2D enemy = enemiesToDamage[i];
+            if (!enemy.gameObject.Equals(transform.gameObject))
             {
-                if (enemiesToDamage[i].tag == "Box")
+                if (enemy.tag == "Box")
                 {
-                    enemiesToDamage[i].GetComponent<BoxBehaviour>().HitTheBox(this.gameObject, TypeOfDamage);
+                    enemy.GetComponent<BoxBehaviour>().HitTheBox(this.gameObject, TypeOfDamage);
                     return;
                 }
                 else if (TypeOfDamage == 0)
                 {
-                    Push(enemiesToDamage[i].gameObject);
+                    Push(enemy.gameObject);
+                    if (enemy.GetComponent<FighterBehavior>().Player == PlayerType.Player1)
+                    {
+                        BoxSingleton.Instance.Player1Score--;
+                        return;
+                    }
+                    else
+                    {
+                        BoxSingleton.Instance.Player2Score--;
+                        return;
+                    }
+                    
+                }
+                else if (TypeOfDamage == 1)
+                {
+                    Push(enemy.gameObject);
+                    return;
                 }
             }
         }
@@ -138,7 +155,7 @@ public class FighterBehavior : MonoBehaviour
     {
         fighter.GetComponent<FighterBehavior>().IsStuned = true;
         fighter.GetComponent<FighterBehavior>().KnockbackTime = 1;
-        fighter.GetComponent<Rigidbody2D>().velocity = ((transform.right) + Vector3.up).normalized * 5;
+        fighter.GetComponent<Rigidbody2D>().velocity = ((transform.right) + Vector3.up*1.5f) * 3;
     }
 
     private void GetAxis()

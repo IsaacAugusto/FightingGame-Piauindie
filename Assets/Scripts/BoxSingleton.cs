@@ -29,4 +29,15 @@ public class BoxSingleton : MonoBehaviour
     {
         
     }
+
+    private void FixedUpdate()
+    {
+        ClampScores();
+    }
+
+    private void ClampScores()
+    {
+        Player1Score = Mathf.Clamp(Player1Score, 0, 100);
+        Player2Score = Mathf.Clamp(Player2Score, 0, 100);
+    }
 }
