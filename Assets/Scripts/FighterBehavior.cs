@@ -15,21 +15,27 @@ public class FighterBehavior : MonoBehaviour
 
     private KeyCode _jumpKey;
     private KeyCode _attackKey;
+    private KeyCode _blockKey;
 
     public float Hp;
     public float KnockbackTime;
     public int SpecialDamage;
+    public bool IsStuned;
+    public bool IsBlocking = false;
 
+    [SerializeField] private float _blockTime;
     [SerializeField] private float _mSpeed;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _atkRange;
     [SerializeField] private float _atkSpeed;
     [SerializeField] private float _atkTime;
     private float _xInput;
+    private float _blockTimer;
+    private float _timeLastBlock;
 
     private Vector2 _screenBoundsPositive;
     private Vector2 _screenBoundsNegative;
-    public bool IsStuned;
+    private bool _readyToBlock = true;
     private Rigidbody2D _rb;
     private Animator _anim;
     private bool _isGrounded;
@@ -40,14 +46,18 @@ public class FighterBehavior : MonoBehaviour
         {
             _jumpKey = KeyCode.W;
             _attackKey = KeyCode.F;
+            _blockKey = KeyCode.G;
         } else
         {
             _jumpKey = KeyCode.UpArrow;
             _attackKey = KeyCode.P;
+            _blockKey = KeyCode.O;
         }
 
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
+
+        _blockTimer = _blockTime;
     }
 
     private void LateUpdate()
@@ -78,6 +88,7 @@ public class FighterBehavior : MonoBehaviour
         Jump();
         KnockbackTimer();
         PlayerAttack();
+        PlayerBlock();
     }
 
     private void KnockbackTimer()
@@ -110,10 +121,34 @@ public class FighterBehavior : MonoBehaviour
                     enemy.GetComponent<BoxBehaviour>().HitTheBox(this.gameObject, TypeOfDamage);
                     return;
                 }
-                else if (TypeOfDamage == 0)
+
+                if (!enemy.GetComponent<FighterBehavior>().IsBlocking)
                 {
-                    Push(enemy.gameObject);
-                    if (enemy.GetComponent<FighterBehavior>().Player == PlayerType.Player1)
+                    if (TypeOfDamage == 0)
+                    {
+                        Push(enemy.gameObject, 1);
+                        if (enemy.GetComponent<FighterBehavior>().Player == PlayerType.Player1)
+                        {
+                            BoxSingleton.Instance.Player1Score--;
+                            return;
+                        }
+                        else
+                        {
+                            BoxSingleton.Instance.Player2Score--;
+                            return;
+                        }
+
+                    }
+                    else if (TypeOfDamage == 1)
+                    {
+                        Push(enemy.gameObject, 1);
+                        return;
+                    }
+                }
+                else
+                {
+                    Push(this.gameObject, -1);
+                    if (Player == PlayerType.Player1)
                     {
                         BoxSingleton.Instance.Player1Score--;
                         return;
@@ -123,12 +158,6 @@ public class FighterBehavior : MonoBehaviour
                         BoxSingleton.Instance.Player2Score--;
                         return;
                     }
-                    
-                }
-                else if (TypeOfDamage == 1)
-                {
-                    Push(enemy.gameObject);
-                    return;
                 }
             }
         }
@@ -147,15 +176,40 @@ public class FighterBehavior : MonoBehaviour
         if (Input.GetKeyDown(_attackKey) && _atkTime <= 0)
         {
             DealDamage(0);
+            _anim.Play("Punch");
             _atkTime = _atkSpeed;
         }
     }
 
-    private void Push(GameObject fighter)
+    private void PlayerBlock()
+    {
+        if (Input.GetKeyDown(_blockKey) && !IsBlocking && _readyToBlock)
+        {
+            IsBlocking = true;
+            _anim.Play("Block");
+            _timeLastBlock = Time.time;
+            _readyToBlock = false;
+        }
+        if (IsBlocking)
+        {
+            _blockTimer -= Time.deltaTime;
+        }
+        if (_blockTimer <= 0)
+        {
+            IsBlocking = false;
+            _blockTimer = _blockTime;
+        }
+        if (Time.time - _timeLastBlock >= 1.5f)
+        {
+            _readyToBlock = true;
+        }
+    }
+
+    private void Push(GameObject fighter, int direction)
     {
         fighter.GetComponent<FighterBehavior>().IsStuned = true;
         fighter.GetComponent<FighterBehavior>().KnockbackTime = 1;
-        fighter.GetComponent<Rigidbody2D>().velocity = ((transform.right) + Vector3.up*1.5f) * 3;
+        fighter.GetComponent<Rigidbody2D>().velocity = ((transform.right * direction) + Vector3.up * 1.5f) * 3;
     }
 
     private void GetAxis()

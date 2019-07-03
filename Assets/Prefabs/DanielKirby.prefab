@@ -128,6 +128,8 @@ MonoBehaviour:
   Hp: 10
   KnockbackTime: 1
   SpecialDamage: 10
+  IsBlocking: 0
+  _blockTime: 0.5
   _mSpeed: 4
   _jumpForce: 5
   _atkRange: 0.2

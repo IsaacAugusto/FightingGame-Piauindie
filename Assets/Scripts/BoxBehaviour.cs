@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class BoxBehaviour : MonoBehaviour
 {
+    public float Hp;
+    public float InitialHp;
     [SerializeField] private Sprite _boxComplete;
     [SerializeField] private Sprite _boxHalf;
     [SerializeField] private Sprite _boxBroken;
-    [SerializeField] private float _hp;
     private SpriteRenderer _spriteRenderer;
-    private float _initialHp;
-    private float _initTime;
+    public float _initTime;
     private bool _blinking;
     private Rigidbody2D _rb;
     private Animator _anim;
@@ -21,7 +21,7 @@ public class BoxBehaviour : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _initialHp = _hp;
+        InitialHp = Hp;
     }
 
     void Update()
@@ -33,21 +33,27 @@ public class BoxBehaviour : MonoBehaviour
         SpriteUpdate();
     }
 
+    private void ReloadTheScene()
+    {
+        BoxSingleton.Instance.ReloadScene();
+    }
+
     private void SpriteUpdate()
     {
-        if (_hp > (_initialHp / 3) * 2)
+        if (Hp > (InitialHp / 3) * 2)
         {
             _spriteRenderer.sprite = _boxComplete;
-        } else if (_hp > (_initialHp/3) && _hp < (_initialHp / 3 ) * 2)
+        } else if (Hp > (InitialHp/3) && Hp < (InitialHp / 3 ) * 2)
         {
             _spriteRenderer.sprite = _boxHalf;
         }
-        else if (_hp < _initialHp/3 && _hp > 0)
+        else if (Hp < InitialHp/3 && Hp > 0)
         {
             _spriteRenderer.sprite = _boxBroken;
-        } else if (_hp <= 0)
+        } else if (Hp <= 0)
         {
             Destroy(this.gameObject);
+            ReloadTheScene();
         }
     }
 
@@ -65,7 +71,7 @@ public class BoxBehaviour : MonoBehaviour
     {
         if (!_blinking)
         {
-            PushAndDamageTheBox(fighter);
+            PushTheBox(fighter);
             ScoreIncrease(fighter, TypeOfHit);
         }
     }
@@ -77,13 +83,13 @@ public class BoxBehaviour : MonoBehaviour
             if (TypeOfHit == 0)
             {
                 BoxSingleton.Instance.Player1Score++;
-                _hp--;
+                Hp--;
             }
             else if (TypeOfHit == 1)
             {
                 int damage = fighter.GetComponent<FighterBehavior>().SpecialDamage;
                 BoxSingleton.Instance.Player1Score += damage;
-                _hp -= damage;
+                Hp -= damage;
             }
         }
         else if (fighter.GetComponent<FighterBehavior>().Player == PlayerType.Player2)
@@ -91,24 +97,23 @@ public class BoxBehaviour : MonoBehaviour
             if (TypeOfHit == 0)
             {
                 BoxSingleton.Instance.Player2Score++;
-                _hp--;
+                Hp--;
             }
             else if (TypeOfHit == 1)
             {
                 int damage = fighter.GetComponent<FighterBehavior>().SpecialDamage;
                 BoxSingleton.Instance.Player2Score += damage;
-                _hp -= damage;
+                Hp -= damage;
             }
         }
     }
 
-    private void PushAndDamageTheBox(GameObject fighter)
+    private void PushTheBox(GameObject fighter)
     {
-            _hp -= 1;
-            _rb.velocity = ((fighter.transform.right) + Vector3.up).normalized * 4.5f;
-            _rb.AddTorque(10f);
-            _initTime = Time.time;
-            _blinking = true;
+        _rb.velocity = ((fighter.transform.right) + Vector3.up).normalized * 4.5f;
+        _rb.AddTorque(10f);
+        _initTime = Time.time;
+        _blinking = true;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -124,7 +129,6 @@ public class BoxBehaviour : MonoBehaviour
         if (collision.tag == "OutOfLevel")
         {
             transform.position = new Vector3(-4, 0, 0);
-            _hp = _initialHp;
         }
     }
 }

@@ -11,11 +11,11 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         GetCharacters();
+        SpawnPlayers();
     }
 
     void Start()
     {
-        SpawnPlayers();
     }
 
     void Update()
