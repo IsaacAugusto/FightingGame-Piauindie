@@ -1,7 +1,34 @@
 fileFormatVersion: 2
 guid: 6a5f94b3bd06f1e42931e4116f72524f
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 6402576595317505093
+    second: Spritesheet do Subdaniel kirby walking_0
+  - first:
+      213: 6342651119323787068
+    second: Spritesheet do Subdaniel kirby walking_1
+  - first:
+      213: -4680413253506147767
+    second: Spritesheet do Subdaniel kirby walking_2
+  - first:
+      213: -7302288665163381998
+    second: Spritesheet do Subdaniel kirby walking_3
+  - first:
+      213: -4403012082799955616
+    second: Spritesheet do Subdaniel kirby walking_4
+  - first:
+      213: 1050874702806969614
+    second: Spritesheet do Subdaniel kirby walking_5
+  - first:
+      213: -6142760187449909921
+    second: Spritesheet do Subdaniel kirby walking_6
+  - first:
+      213: 986721436688648451
+    second: Spritesheet do Subdaniel kirby walking_7
+  - first:
+      213: -8611835898746802124
+    second: Spritesheet do Subdaniel kirby walking_8
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -31,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
+    filterMode: 0
     aniso: -1
     mipBias: -100
     wrapU: 1
@@ -40,12 +67,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 50
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -69,9 +96,220 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Spritesheet do Subdaniel kirby walking_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 68.66667
+        width: 33
+        height: 34.333332
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f508d54e971f9e34baaf2d7fa011cbc2
+      internalID: 6402576595317505093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spritesheet do Subdaniel kirby walking_1
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 69
+        width: 32
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fd47746346852d4db340a76bd8f78d2
+      internalID: 6342651119323787068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spritesheet do Subdaniel kirby walking_2
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 68.66667
+        width: 33
+        height: 34.333332
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0497ebca4da27e84f94fd9bd3965c337
+      internalID: -4680413253506147767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spritesheet do Subdaniel kirby walking_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 34.666668
+        width: 33
+        height: 34.333332
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19427af23f626f546a016871677559f0
+      internalID: -7302288665163381998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spritesheet do Subdaniel kirby walking_4
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 35
+        width: 33
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd1acc971f301ca4ba85f673a0de73e0
+      internalID: -4403012082799955616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spritesheet do Subdaniel kirby walking_5
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 35
+        width: 33
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be8614336d6b03048ad693f463ee99bf
+      internalID: 1050874702806969614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spritesheet do Subdaniel kirby walking_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0.66666794
+        width: 33
+        height: 34.333332
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6066ae2ab428b014b899f9fc721c28cc
+      internalID: -6142760187449909921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spritesheet do Subdaniel kirby walking_7
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 1
+        width: 35
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43702af955481154abd3fb59692e7712
+      internalID: 986721436688648451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spritesheet do Subdaniel kirby walking_8
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 0.66666794
+        width: 33
+        height: 34.333332
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 953a9b9c5f5ba8442bd468ceeccd7cd5
+      internalID: -8611835898746802124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []

@@ -8,6 +8,7 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField] private Transform _player2Pos;
     private Vector3 _relativePos;
     private Vector3 speed;
+    private float _posX;
 
     void Start()
     {
@@ -25,7 +26,8 @@ public class CameraBehaviour : MonoBehaviour
         }
         _relativePos = Vector3.Lerp(_player1Pos.position, _player2Pos.position, 0.5f);
         transform.position = Vector3.SmoothDamp(transform.position, _relativePos, ref speed, 0.3f);
-        transform.position = new Vector3(transform.position.x, 0, -10);
+        _posX = Mathf.Clamp(transform.position.x, -9, 8.40f);
+        transform.position = new Vector3(_posX, 0, -10);
     }
 
     private void GetPlayersPos()

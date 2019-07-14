@@ -8,30 +8,40 @@ public class FighterBehavior : MonoBehaviour
 {
     public PlayerType Player;
 
+    [SerializeField] private GameObject _hitParticle;
     [SerializeField] private LayerMask _groudLayer;
     [SerializeField] private LayerMask _fighterLayer;
-
     [SerializeField] private Transform _atkPosition;
-
-    private KeyCode _jumpKey;
-    private KeyCode _attackKey;
-    private KeyCode _blockKey;
-
-    public float Hp;
-    public float KnockbackTime;
-    public int SpecialDamage;
-    public bool IsStuned;
-    public bool IsBlocking = false;
-
     [SerializeField] private float _blockTime;
     [SerializeField] private float _mSpeed;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _atkRange;
     [SerializeField] private float _atkSpeed;
     [SerializeField] private float _atkTime;
+    [SerializeField] private float _timeBlinking;
+    [SerializeField] private AudioClip _hurt1Sound, _hurt2Sound, _jumpSound, _hitSound;
+
+    private KeyCode _jumpKey;
+    private KeyCode _attackKey;
+    private KeyCode _blockKey;
+
+    private Quaternion _rotateLeft = new Quaternion(0, 180, 0, 0);
+    private GameManager _gameManager;
+    public float Hp;
+    public float KnockbackTime;
+    public int SpecialDamage;
+    public bool IsStuned;
+    public bool IsBlocking = false;
+    public bool IsBlinking = false;
+
+
+    private FighterBehavior _otherPlayer;
+
     private float _xInput;
     private float _blockTimer;
     private float _timeLastBlock;
+    private float _timeLastWalk;
+    private float _blinkTime;
 
     private Vector2 _screenBoundsPositive;
     private Vector2 _screenBoundsNegative;
@@ -39,9 +49,12 @@ public class FighterBehavior : MonoBehaviour
     private Rigidbody2D _rb;
     private Animator _anim;
     private bool _isGrounded;
+    private AudioSource _source;
 
     void Start()
     {
+        _gameManager = FindObjectOfType<GameManager>();
+        _source = GetComponent<AudioSource>();
         if (Player == PlayerType.Player1)
         {
             _jumpKey = KeyCode.W;
@@ -58,6 +71,8 @@ public class FighterBehavior : MonoBehaviour
         _anim = GetComponent<Animator>();
 
         _blockTimer = _blockTime;
+
+        SetOtherPlayer();
     }
 
     private void LateUpdate()
@@ -89,6 +104,7 @@ public class FighterBehavior : MonoBehaviour
         KnockbackTimer();
         PlayerAttack();
         PlayerBlock();
+        BlinkTimeDecrease();
     }
 
     private void KnockbackTimer()
@@ -121,32 +137,37 @@ public class FighterBehavior : MonoBehaviour
                     enemy.GetComponent<BoxBehaviour>().HitTheBox(this.gameObject, TypeOfDamage);
                     return;
                 }
-
+                if (!_source.isPlaying)
+                    _source.PlayOneShot(_hitSound);
                 if (!enemy.GetComponent<FighterBehavior>().IsBlocking)
                 {
-                    if (TypeOfDamage == 0)
+                    if (!enemy.GetComponent<FighterBehavior>().IsBlinking)
                     {
-                        Push(enemy.gameObject, 1);
-                        if (enemy.GetComponent<FighterBehavior>().Player == PlayerType.Player1)
+                        if (TypeOfDamage == 0)
                         {
-                            BoxSingleton.Instance.Player1Score--;
-                            return;
-                        }
-                        else
-                        {
-                            BoxSingleton.Instance.Player2Score--;
-                            return;
-                        }
+                            Push(enemy.gameObject, 1);
+                            if (enemy.GetComponent<FighterBehavior>().Player == PlayerType.Player1)
+                            {
+                                BoxSingleton.Instance.Player1Score--;
+                                return;
+                            }
+                            else
+                            {
+                                BoxSingleton.Instance.Player2Score--;
+                                return;
+                            }
 
-                    }
-                    else if (TypeOfDamage == 1)
-                    {
-                        Push(enemy.gameObject, 1);
-                        return;
+                        }
+                        else if (TypeOfDamage == 1)
+                        {
+                            Push(enemy.gameObject, 1);
+                            return;
+                        }
                     }
                 }
                 else
                 {
+                    _anim.Play("Damage");
                     Push(this.gameObject, -1);
                     if (Player == PlayerType.Player1)
                     {
@@ -163,17 +184,31 @@ public class FighterBehavior : MonoBehaviour
         }
     }
 
-    // não utilizado ainda ---------------------
-    public void ReciveDamage(float damageTaken)
+    public void ReciveDamage()
     {
-        Debug.Log("I Take damage");
-        Hp -= damageTaken;
+        Instantiate(_hitParticle, transform.position, Quaternion.identity);
+        PlayHurtSound();
+        _anim.Play("Damage");
+        _blinkTime = _timeBlinking;
     }
-    //------------------------------------------
+
+    private void BlinkTimeDecrease()
+    {
+        if (_blinkTime >= 0)
+        {
+            IsBlinking = true;
+            _blinkTime -= Time.deltaTime;
+        }
+        else
+        {
+            IsBlinking = false;
+        }
+    }
+
     private void PlayerAttack()
     {
         _atkTime -= Time.deltaTime;
-        if (Input.GetKeyDown(_attackKey) && _atkTime <= 0)
+        if (Input.GetKeyDown(_attackKey) && _atkTime <= 0 && !IsBlinking && !IsStuned)
         {
             DealDamage(0);
             _anim.Play("Punch");
@@ -185,6 +220,15 @@ public class FighterBehavior : MonoBehaviour
     {
         if (Input.GetKeyDown(_blockKey) && !IsBlocking && _readyToBlock)
         {
+            if (_otherPlayer.transform.position.x > transform.position.x)
+            {
+                transform.rotation = Quaternion.identity;
+            }
+            else
+            {
+                transform.rotation = transform.rotation = _rotateLeft;
+            }
+
             IsBlocking = true;
             _anim.Play("Block");
             _timeLastBlock = Time.time;
@@ -193,9 +237,13 @@ public class FighterBehavior : MonoBehaviour
         if (IsBlocking)
         {
             _blockTimer -= Time.deltaTime;
+            if (_isGrounded)
+                _rb.velocity = Vector2.up * _rb.velocity.y;
+            IsStuned = true;
         }
         if (_blockTimer <= 0)
         {
+            IsStuned = false;
             IsBlocking = false;
             _blockTimer = _blockTime;
         }
@@ -207,9 +255,10 @@ public class FighterBehavior : MonoBehaviour
 
     private void Push(GameObject fighter, int direction)
     {
+        fighter.GetComponent<FighterBehavior>().ReciveDamage();
         fighter.GetComponent<FighterBehavior>().IsStuned = true;
-        fighter.GetComponent<FighterBehavior>().KnockbackTime = 1;
-        fighter.GetComponent<Rigidbody2D>().velocity = ((transform.right * direction) + Vector3.up * 1.5f) * 3;
+        fighter.GetComponent<FighterBehavior>().KnockbackTime = 0.5f;
+        fighter.GetComponent<Rigidbody2D>().velocity = ((transform.right * direction) + Vector3.up) * 2;
     }
 
     private void GetAxis()
@@ -231,22 +280,35 @@ public class FighterBehavior : MonoBehaviour
 
         if (_rb.velocity.x > 0)
         {
-            transform.rotation = new Quaternion(0, 0, 0, 0);
+            transform.rotation = Quaternion.identity;
         }
         else if (_rb.velocity.x < 0)
         {
-            transform.rotation = new Quaternion(0, 180, 0, 0);
+            transform.rotation = _rotateLeft;
         }
 
         if (_xInput == -1 || _xInput == 1)
         {
             _anim.SetBool("IsWalking", true);
             _anim.SetBool("Idle", false);
+            CheckRun();
         }
         else
         {
             _anim.SetBool("IsWalking", false);
             _anim.SetBool("Idle", true);
+        }
+
+    }
+
+    private void CheckRun()
+    {
+        if (_xInput == 0)
+            _timeLastWalk = Time.time;
+
+        if (Time.time - _timeLastWalk <= 0.5f && _xInput == 1)
+        {
+            Debug.Log("DobleTap");
         }
     }
 
@@ -257,6 +319,7 @@ public class FighterBehavior : MonoBehaviour
             if (Input.GetKeyDown(_jumpKey))
             {
                 _rb.velocity = Vector2.up * _jumpForce;
+                _source.PlayOneShot(_jumpSound);
             }
         }
     }
@@ -267,10 +330,45 @@ public class FighterBehavior : MonoBehaviour
         transform.position = Vector3.zero;
     }
 
+    private void SetOtherPlayer()
+    {
+        if (Player == PlayerType.Player1)
+        {
+            _otherPlayer = _gameManager.GetPlayerRef(2);
+        }
+        else
+        {
+            _otherPlayer = _gameManager.GetPlayerRef(1);
+        }
+    }
+
+    private void PlayHurtSound()
+    {
+        int x = Random.Range(1, 3);
+        if (x == 1)
+        {
+            _source.PlayOneShot(_hurt1Sound);
+            return;
+        }
+        else if (x == 2)
+        {
+            _source.PlayOneShot(_hurt2Sound);
+            return;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "OutOfLevel")
         {
+            if (Player == PlayerType.Player1)
+            {
+                BoxSingleton.Instance.Player1Score-= 3;
+            }
+            else
+            {
+                BoxSingleton.Instance.Player2Score-= 3;
+            }
             Invoke("Respawn", 2);
         }
     }
@@ -288,8 +386,11 @@ public class FighterBehavior : MonoBehaviour
     {
         if (collision.tag == "Ground" || collision.tag == "Player" || collision.tag == "Box")
         {
-            _isGrounded = false;
-            _anim.SetBool("IsJumping", true);
+            if (!IsStuned)
+            {
+                _isGrounded = false;
+                _anim.SetBool("IsJumping", true);
+            }
         }
     }
 }

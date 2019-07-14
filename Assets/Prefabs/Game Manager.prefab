@@ -43,7 +43,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090b1ae7b1b36b6428bdae7b175bb962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Player1: {fileID: 0}
+  Player2: {fileID: 0}
   _kirbyDaniel: {fileID: 3639050933260330235, guid: c94df7cb412c939459f547b0d5e9a980,
+    type: 3}
+  _subDaniel: {fileID: 175174731893218045, guid: ee023548e69321247b11a97c31e8aac1,
     type: 3}
   _player1Spawn: {fileID: 0}
   _player2Spawn: {fileID: 0}
